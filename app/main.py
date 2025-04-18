@@ -1,3 +1,4 @@
+# git pull WaterDelivery BackW ОБЯЗАТЕЛЬНО ПЕРЕД НАЧАЛОМ!!!!!!!!!!!!!!!! в конеце git add --all ; git commit -m "Описать подробно что делал" ; git push WaterDelivery BackW
 from fastapi import FastAPI #.\venv\Scripts\activate ; uvicorn app.main:app ; uvicorn app.main:app --reload
 from utils import json_to_dict_list
 import os
