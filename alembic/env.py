@@ -12,6 +12,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from app.db.database import Base
 from app.db.models.users import User
 from app.db.models.product import Product
+from app.db.models.orders import Order, OrderItem, Payment
+from app.db.models.delivery import Courier, DeliveryLog
 
 # Alembic Config object
 config = context.config
