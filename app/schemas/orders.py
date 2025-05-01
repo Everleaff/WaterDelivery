@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, conint, confloat
 from typing import List
 from datetime import datetime
 
@@ -6,8 +6,8 @@ from datetime import datetime
 
 class OrderItemBase(BaseModel):
     product_id: int
-    quantity: int
-    price: float
+    quantity: conint(gt=0)
+    price: confloat(gt=0)
 
 class OrderItemCreate(OrderItemBase):
     pass
@@ -27,9 +27,9 @@ class OrderCreate(BaseModel):
 class OrderOut(BaseModel):
     id: int
     user_id: int
-    status: str
+    status: str  # Можно добавить constr(min_length=1) если нужно
     created_at: datetime
-    items: List[OrderItemOut] = []
+    items: List[OrderItemOut]
 
     class Config:
         from_attributes = True

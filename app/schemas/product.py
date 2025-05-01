@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr, condecimal, HttpUrl
 from typing import Optional
 
 class ProductBase(BaseModel):
-    name: str
-    description: str
-    price: float
-    image_url: Optional[str] = None
+    name: constr(min_length=1, max_length=100)
+    description: constr(min_length=1)
+    price: condecimal(gt=0)
+    image_url: Optional[HttpUrl] = None  # Строгое соответствие URL
 
 class ProductCreate(ProductBase):
     pass
