@@ -39,7 +39,7 @@
           </ul>
         </div>
         <div class="navbar-end">
-          <a class="btn">Button</a>
+          <a class=" btn btn-ghost border-none shadow-md shadow-emerald-800 hover:shadow-emerald-900 hover:bg-emerald-700 m-1 bg-emerald-500">Кнопка чего-то</a>
         </div>
       </div>
       <div class="flex justify-between bg-teal-600 lg:menu-horizontal shadow-md ml-4 p-4 rounded-md shadow-emerald-900 inset-shadow-xs inset-shadow-emerald-500 opacity-90 z-10">
