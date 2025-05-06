@@ -4,12 +4,20 @@
       <div class="sticky top-0 flex justify-between z-10">
         <div class="navbar bg-teal-600 pr-4  opacity-90 z-10">
           <div class="navbar-start">
-            <a class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 text-xl">Доставка воды от Романа</a>
+            <NuxtLink to="/" draggable="false">
+               <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 text-xl active:bg-teal-700">Доставка воды от Романа</button>
+            </NuxtLink>
           </div>
           <div class="navbar-center lg:flex ">
-            <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1 ">Товары</button>
-            <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1 ">Доставка</button>
-            <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1 ">О нас</button>
+            <NuxtLink to="/water" draggable="false" >
+              <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Товары</button>
+            </NuxtLink>
+            <NuxtLink to="/delivery" draggable="false">
+              <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Доставка</button>
+            </NuxtLink>
+            <NuxtLink to="/about" draggable="false">
+              <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">О нас</button>
+            </NuxtLink>
           </div>
           <div class="navbar-end">
 <!--            Будет показываться, если человек прошел регистрацию/логин:-->
@@ -56,7 +64,7 @@
 <!--            </div>-->
 
             <div class="flex space-x-4">
-              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1" v-on:click="log_reg_tab = !log_reg_tab">Аккаунт</button>
+              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" v-on:click="log_reg_tab = !log_reg_tab">Аккаунт</button>
             </div>
 
 
