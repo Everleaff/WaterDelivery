@@ -63,9 +63,9 @@
           </div>
 
         </div>
-        <div class="absolute z-10 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0" v-if="log_reg_tab===true"  v-on:dblclick.self="log_reg_tab = false">
+        <div class="absolute z-10 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0 " v-if="log_reg_tab===true"  v-on:dblclick.self="log_reg_tab = false">
           <Tabs default-value="login" class="w-[400px] z-30 ">
-            <TabsList class="grid w-full grid-cols-2 bg-teal-600  gap-4">
+            <TabsList class="grid w-full grid-cols-2 bg-teal-600  gap-4 ">
               <TabsTrigger value="login" class="!text-white font-semibold data-[state=active]:bg-teal-700">
                 Логин
               </TabsTrigger>
@@ -78,17 +78,18 @@
                 <CardHeader>
                   <CardTitle>Вход</CardTitle>
                   <CardDescription class="text-white/50">
-                    Введите данные в поля
+                    <p>Здесь вы можете войти в свой аккаунт.</p>
+                    <p>Заполните поля ниже</p>
                   </CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-2">
                   <div class="space-y-1">
                     <Label for="login">Логин</Label>
-                    <Input id="login" class="bg-teal-700 text-white border-none" default-value="Pedro Duarte" />
+                    <Input id="login" class="bg-teal-700 text-white border-none placeholder:text-white/50 focus:placeholder-transparent" placeholder="Ваш логин"  />
                   </div>
                   <div class="space-y-1">
                     <Label for="password">Пароль</Label>
-                    <Input id="password" class="bg-teal-700 text-white border-none" default-value="@peduarte" />
+                    <Input id="password" class="bg-teal-700 text-white border-none placeholder:text-white/50 focus:placeholder-transparent" placeholder="Ваш пароль"  type="password"  />
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -101,29 +102,46 @@
                 <CardHeader>
                   <CardTitle>Регистрация</CardTitle>
                   <CardDescription class="text-white/50">
-                    Введите данные в поля
+                    <p>Здесь вы можете создать новый аккаунт.</p>
+                    <p>Заполните поля ниже</p>
                   </CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-2">
                   <div class="space-y-1">
-                    <Label for="current">Имя</Label>
-                    <Input id="current" class="bg-teal-700 text-white border-none" type="registration" />
+                    <Label for="name">Имя</Label>
+                    <Input id="name" v-model="form.name" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" placeholder="Ваше имя. Так к Вам будут обращаться при заказе" />
                   </div>
                   <div class="space-y-1">
-                    <Label for="new">Фамилия</Label>
-                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                    <Label for="login">Логин</Label>
+                    <Input id="login" v-model="form.login" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="text" placeholder="Ваш логин. По нему осуществляется вход на сайт" />
                   </div>
                   <div class="space-y-1">
-                    <Label for="new">Логин</Label>
-                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                    <Label for="email">Почта</Label>
+                    <Input id="email" v-model="form.email" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="email" placeholder="Ваша почта. Для безопасности аккаунта" />
                   </div>
                   <div class="space-y-1">
-                    <Label for="new">Почта</Label>
-                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                    <Label for="phone">Номер телефона</Label>
+                    <Input id="phone" v-model="form.phone"  class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="tel" placeholder="Ваш номер. Детали заказа по звонку"  />
                   </div>
                   <div class="space-y-1">
-                    <Label for="new">Адрес проживания</Label>
-                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                    <Label for="password"  >Пароль</Label>
+                    <div class="flex gap-2">
+                      <Input id="password" v-model="form.password" :type="show_pass ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Ваш пароль. Он будет использоваться для входа"  />
+                      <Button type="button" v-on:click="show_pass = !show_pass" class=" bg-teal-500 hover:bg-teal-700 p-2 rounded-md">
+                        <Icon :name="show_pass ? 'mdi:eye-off' : 'mdi:eye'" class="w-6 h-6 text-white"/>
+                      </Button>
+                    </div>
+
+                  </div>
+
+                  <div class="space-y-1">
+                    <Label for="password_conf">Повторный пароль</Label>
+                    <div class="flex gap-2">
+                      <Input id="password_conf" v-model="form.password_conf" :type="show_confirm ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Повторный пароль. Для проверки"  />
+                      <Button type="button" v-on:click="show_confirm = !show_confirm" class="bg-teal-500 hover:bg-teal-700 p-2 rounded-md">
+                        <Icon :name="show_confirm ? 'mdi:eye-off' : 'mdi:eye'" class="w-6 h-6 text-white"/>
+                      </Button>
+                    </div>
                   </div>
 
                 </CardContent>
@@ -208,5 +226,21 @@
 <script setup lang="ts">
 
 const log_reg_tab = ref(false)
+
+const form = reactive({
+  name:     '',
+  login:    '',
+  email:    '',
+  phone:    '',
+  password: '',
+  password_conf:  '',
+})
+
+const show_pass    = ref(false)
+const show_confirm = ref(false)
+
+const passwordsMatch = computed(
+    () => form.password !== '' && form.password === form.password_conf
+)
 
 </script>
