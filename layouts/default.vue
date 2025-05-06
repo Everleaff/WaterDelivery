@@ -64,7 +64,7 @@
 <!--            </div>-->
 
             <div class="flex space-x-4">
-              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" v-on:click="log_reg_tab = !log_reg_tab">Аккаунт</button>
+              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" v-on:click="log_reg_tab = !log_reg_tab; open_login_modal()">Аккаунт</button>
             </div>
 
 
@@ -72,7 +72,7 @@
 
         </div>
         <div class="absolute !z-20 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0 fixed" v-if="log_reg_tab===true"  v-on:dblclick.self="log_reg_tab = false">
-          <Tabs default-value="login" class="w-[400px] z-30 ">
+          <Tabs v-model="log_reg_modal_type" class="w-[400px] z-30 ">
             <TabsList class="grid w-full grid-cols-2 bg-teal-600  gap-4 ">
               <TabsTrigger value="login" class="!text-white font-semibold data-[state=active]:bg-teal-700">
                 Логин
@@ -265,8 +265,17 @@ const passwordsMatch = computed(
     () => form_reg.password !== '' && form_reg.password === form_reg.password_conf
 )
 
+const log_reg_modal_type = ref("login")
+
+function open_login_modal() {
+
+  log_reg_modal_type.value = "login"
+  log_reg_tab.value = true
+}
 
 function open_auth_modal() {
+
+  log_reg_modal_type.value = "registration"
   log_reg_tab.value = true
 }
 
