@@ -41,19 +41,13 @@
 
         </div>
       </div>
-      <div class="card  image-full w-96 shadow-sm m-8 mb-20"   v-on:mouseover="hover=true" v-on:mouseleave="hover=false">
+      <div class="card  image-full w-96 shadow-sm m-8 mb-20 h-150 inline-block"   v-on:mouseover="hover=true" v-on:mouseleave="hover=false">
         <figure>
           <img
               src="/img/voda1.jpg"
               alt="Туалетная вода" />
         </figure>
         <div class="card-body">
-          <!--          <div class="grid gap-row-1 justify-center">-->
-          <!--            <div class="col-span-3">1</div>-->
-          <!--            <div class="col-start-1 col-end-3">2</div>-->
-          <!--            <div class="col-span-2 col-end-7">3</div>-->
-
-          <!--          </div>-->
           <h2 class="card-title justify-center text-[2.5rem] text-center 2xl:text-nowrap ">Вода из раковины</h2>
           <div class="border-1 border-teal-600/50 rounded-full opacity-75 w-full mb-10 mt-2 "></div>
           <div class="flex justify-center mb-10 ">

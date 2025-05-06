@@ -15,8 +15,20 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/test-utils',
     '@nuxt/ui',
-    'nuxtjs-naive-ui'
+    'nuxtjs-naive-ui',
+    'shadcn-nuxt',
   ],
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: '',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './components/ui'
+  },
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [

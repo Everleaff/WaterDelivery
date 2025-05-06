@@ -12,40 +12,117 @@
             <button  class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1 ">О нас</button>
           </div>
           <div class="navbar-end">
+<!--            Будет показываться, если человек прошел регистрацию/логин:-->
+<!--            <div class="flex space-x-4">-->
+
+<!--              <details class="dropdown dropdown-end">-->
+<!--                <summary class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1">-->
+<!--                  Профиль-->
+<!--                </summary>-->
+<!--                <ul class="menu dropdown-content bg-teal-800 opacity-90 rounded-box z-1 w-52 p-2 shadow-sm">-->
+<!--                  <li><a>Просмотреть профиль</a></li>-->
+<!--                  <li class="bg-red-900 rounded-b-md"><a>Выйти из аккаунта</a></li>-->
+<!--                </ul>-->
+<!--              </details>-->
+
+<!--              <details class="dropdown dropdown-end">-->
+<!--                <summary class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1">-->
+<!--                  Профиль-->
+<!--                </summary>-->
+<!--                <ul class="menu dropdown-content bg-teal-800 opacity-90 rounded-box z-1 w-52 p-2 shadow-sm">-->
+<!--                  <li><a>Просмотреть профиль</a></li>-->
+<!--                  <li class="bg-red-900 rounded-b-md"><a>Выйти из аккаунта</a></li>-->
+<!--                </ul>-->
+<!--              </details>-->
+
+
+<!--              <details class="dropdown ">-->
+<!--                <summary class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1 ">-->
+
+<!--                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">&lt;!&ndash; Icon from Huge Icons by Hugeicons - undefined &ndash;&gt;<g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="white"><path d="m8 16l8.72-.727c2.729-.227 3.341-.823 3.643-3.544L21 6M6 6h16"/><circle cx="6" cy="20" r="2"/><circle cx="17" cy="20" r="2"/><path d="M8 20h7M2 2h.966c.945 0 1.768.625 1.997 1.515L7.94 15.076a1.96 1.96 0 0 1-.35 1.686L6.631 18"/></g></svg>-->
+<!--                    Корзина-->
+<!--                </summary>-->
+<!--                <ul class="menu dropdown-content bg-teal-800 opacity-85 rounded-box z-1 w-52 p-2 shadow-sm">-->
+<!--                  <li class=""><a>Просмотреть корзину</a></li>-->
+<!--                  <li class="bg-red-900 rounded-b-md"><a>Очистить корзину</a></li>-->
+<!--                </ul>-->
+<!--              </details>-->
+<!--              <div class="avatar">-->
+<!--                <div class="w-12 rounded-md">-->
+<!--                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--            </div>-->
+
             <div class="flex space-x-4">
-
-              <details class="dropdown dropdown-end">
-                <summary class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1">Профиль
-
-                </summary>
-                <ul class="menu dropdown-content bg-teal-800 opacity-90 rounded-box z-1 w-52 p-2 shadow-sm">
-                  <li><a>Просмотреть профиль</a></li>
-                  <li class="bg-red-900 rounded-b-md"><a>Выйти из аккаунта</a></li>
-                </ul>
-              </details>
-
-
-              <details class="dropdown ">
-                <summary class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700  m-1 ">
-
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><!-- Icon from Huge Icons by Hugeicons - undefined --><g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="white"><path d="m8 16l8.72-.727c2.729-.227 3.341-.823 3.643-3.544L21 6M6 6h16"/><circle cx="6" cy="20" r="2"/><circle cx="17" cy="20" r="2"/><path d="M8 20h7M2 2h.966c.945 0 1.768.625 1.997 1.515L7.94 15.076a1.96 1.96 0 0 1-.35 1.686L6.631 18"/></g></svg>
-                    Корзина
-                </summary>
-                <ul class="menu dropdown-content bg-teal-800 opacity-85 rounded-box z-1 w-52 p-2 shadow-sm">
-                  <li class=""><a>Просмотреть корзину</a></li>
-                  <li class="bg-red-900 rounded-b-md"><a>Очистить корзину</a></li>
-                </ul>
-              </details>
-              <div class="avatar">
-                <div class="w-12 rounded-md">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                </div>
-              </div>
-
+              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1">Аккаунт</button>
             </div>
+
+
           </div>
 
         </div>
+        <div class="absolute z-20 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0 hidden">
+          <Tabs default-value="account" class="w-[400px] ">
+            <TabsList class="grid w-full grid-cols-2">
+              <TabsTrigger value="account">
+                Account
+              </TabsTrigger>
+              <TabsTrigger value="password">
+                Password
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="account">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Account</CardTitle>
+                  <CardDescription>
+                    Make changes to your account here. Click save when you're done.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent class="space-y-2">
+                  <div class="space-y-1">
+                    <Label for="name">Name</Label>
+                    <Input id="name" default-value="Pedro Duarte" />
+                  </div>
+                  <div class="space-y-1">
+                    <Label for="username">Username</Label>
+                    <Input id="username" default-value="@peduarte" />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button>Save changes</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="password">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Password</CardTitle>
+                  <CardDescription>
+                    Change your password here. After saving, you'll be logged out.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent class="space-y-2">
+                  <div class="space-y-1">
+                    <Label for="current">Current password</Label>
+                    <Input id="current" type="password" />
+                  </div>
+                  <div class="space-y-1">
+                    <Label for="new">New password</Label>
+                    <Input id="new" type="password" />
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button>Save password</Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+
 
       </div>
       <slot/>
@@ -114,3 +191,7 @@
 
 
 </template>
+
+<script setup lang="ts">
+
+</script>
