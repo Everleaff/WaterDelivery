@@ -71,7 +71,7 @@
           </div>
 
         </div>
-        <div class="absolute z-10 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0 " v-if="log_reg_tab===true"  v-on:dblclick.self="log_reg_tab = false">
+        <div class="absolute !z-20 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0 fixed" v-if="log_reg_tab===true"  v-on:dblclick.self="log_reg_tab = false">
           <Tabs default-value="login" class="w-[400px] z-30 ">
             <TabsList class="grid w-full grid-cols-2 bg-teal-600  gap-4 ">
               <TabsTrigger value="login" class="!text-white font-semibold data-[state=active]:bg-teal-700">
@@ -264,5 +264,12 @@ const show_confirm = ref(false)
 const passwordsMatch = computed(
     () => form_reg.password !== '' && form_reg.password === form_reg.password_conf
 )
+
+
+function open_auth_modal() {
+  log_reg_tab.value = true
+}
+
+provide('open_auth_modal', open_auth_modal)
 
 </script>

@@ -2,7 +2,7 @@
 <template>
   <div class="min-h-screen text-white overflow-hidden relative">
 
-    <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-50 flex flex-col space-y-4">
+    <div class="fixed right-4 top-1/2 transform -translate-y-1/2 !z-5 flex flex-col space-y-4">
       <button
           v-for="(section, index) in sections"
           :key="index"
@@ -15,7 +15,7 @@
     <section
         v-for="(section, index) in sections"
         :key="index"
-        class="h-screen w-full absolute top-0 left-0 flex items-center justify-center transition-all  ease-in-out"
+        class="h-screen w-full absolute top-0 left-0 flex items-center justify-center transition-all ease-in-out"
         :class="currentSection === index ? normal_class : hidden_class"
         :data-aos="section.aos"
         :data-aos-delay="section.delay"
@@ -27,7 +27,7 @@
         <template v-if="index === 0">
           <h1 class="text-6xl font-bold mb-6 animate-zoomIn text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">Добро пожаловать!</h1>
           <p class="text-xl mb-6 animate-slideUp text-gray-200">Лучшая вода с доставкой прямо к вам домой.</p>
-          <button class="btn btn-ghost border-none hover:shadow-xl hover:bg-teal-700 m-1 active:bg-teal-700 bg-teal-600 animate-pulse text-white px-6 py-3 rounded-full shadow-lg transition-all ">Зарегистрироваться</button>
+          <button class="btn btn-ghost border-none hover:shadow-xl hover:bg-teal-700 m-1 active:bg-teal-700 bg-teal-600 animate-pulse text-white px-6 py-3 rounded-full shadow-lg transition-all " v-on:click="open_auth_modal && open_auth_modal()">Зарегистрироваться</button>
         </template>
 
         <template v-if="index === 1">
@@ -83,7 +83,7 @@
         <template v-if="index === 5">
           <h2 class="text-5xl font-bold mb-12 animate-zoomIn text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">Свяжитесь с нами</h2>
           <p class="text-xl mb-6 animate-slideUp text-gray-200">Email: ogo@mail.ru | Телефон: +7 (999) 888-77-66</p>
-          <button class="btn btn-ghost border-none hover:shadow-xl hover:bg-teal-700 m-1 active:bg-teal-700 bg-teal-600 animate-pulse text-white px-6 py-3 rounded-full shadow-lg transition-all ">Зарегистрироваться</button>
+          <button class="btn btn-ghost border-none hover:shadow-xl hover:bg-teal-700 m-1 active:bg-teal-700 bg-teal-600 animate-pulse text-white px-6 py-3 rounded-full shadow-lg transition-all " v-on:click="open_auth_modal && open_auth_modal()">Зарегистрироваться</button>
         </template>
       </div>
     </section>
@@ -150,8 +150,8 @@ const currentSection = ref(0)
 const hover = ref(false)
 const blur_card = ref('')
 
-const normal_class = ref('opacity-100 z-10');
-const hidden_class = ref('opacity-100 z-10 hidden pointer-events-none');
+const normal_class = ref('opacity-100 z-0');
+const hidden_class = ref('opacity-100 z-0 hidden pointer-events-none');
 
 
 const sections = [
@@ -229,4 +229,7 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKey)
   window.removeEventListener('scroll',  updateOverlay)
 })
+
+const open_auth_modal = inject<() => void>('open_auth_modal')
+
 </script>
