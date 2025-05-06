@@ -56,66 +56,79 @@
 <!--            </div>-->
 
             <div class="flex space-x-4">
-              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1">Аккаунт</button>
+              <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1" v-on:click="log_reg_tab = !log_reg_tab">Аккаунт</button>
             </div>
 
 
           </div>
 
         </div>
-        <div class="absolute z-20 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0 hidden">
-          <Tabs default-value="account" class="w-[400px] ">
-            <TabsList class="grid w-full grid-cols-2">
-              <TabsTrigger value="account">
-                Account
+        <div class="absolute z-10 bg-black/40 h-screen w-screen place-items-center justify-center flex top-0" v-if="log_reg_tab===true"  v-on:dblclick.self="log_reg_tab = false">
+          <Tabs default-value="login" class="w-[400px] z-30 ">
+            <TabsList class="grid w-full grid-cols-2 bg-teal-600  gap-4">
+              <TabsTrigger value="login" class="!text-white font-semibold data-[state=active]:bg-teal-700">
+                Логин
               </TabsTrigger>
-              <TabsTrigger value="password">
-                Password
+              <TabsTrigger value="registration" class="!text-white font-semibold data-[state=active]:bg-teal-700">
+                Регистрация
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="account">
-              <Card>
+            <TabsContent value="login"  class="" >
+              <Card class="bg-teal-600 text-white border-none">
                 <CardHeader>
-                  <CardTitle>Account</CardTitle>
-                  <CardDescription>
-                    Make changes to your account here. Click save when you're done.
+                  <CardTitle>Вход</CardTitle>
+                  <CardDescription class="text-white/50">
+                    Введите данные в поля
                   </CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-2">
                   <div class="space-y-1">
-                    <Label for="name">Name</Label>
-                    <Input id="name" default-value="Pedro Duarte" />
+                    <Label for="login">Логин</Label>
+                    <Input id="login" class="bg-teal-700 text-white border-none" default-value="Pedro Duarte" />
                   </div>
                   <div class="space-y-1">
-                    <Label for="username">Username</Label>
-                    <Input id="username" default-value="@peduarte" />
+                    <Label for="password">Пароль</Label>
+                    <Input id="password" class="bg-teal-700 text-white border-none" default-value="@peduarte" />
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button>Save changes</Button>
+                  <Button class="bg-teal-500 hover:bg-teal-700 text-white">Войти</Button>
                 </CardFooter>
               </Card>
             </TabsContent>
-            <TabsContent value="password">
-              <Card>
+            <TabsContent value="registration">
+              <Card class="bg-teal-600 text-white border-none">
                 <CardHeader>
-                  <CardTitle>Password</CardTitle>
-                  <CardDescription>
-                    Change your password here. After saving, you'll be logged out.
+                  <CardTitle>Регистрация</CardTitle>
+                  <CardDescription class="text-white/50">
+                    Введите данные в поля
                   </CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-2">
                   <div class="space-y-1">
-                    <Label for="current">Current password</Label>
-                    <Input id="current" type="password" />
+                    <Label for="current">Имя</Label>
+                    <Input id="current" class="bg-teal-700 text-white border-none" type="registration" />
                   </div>
                   <div class="space-y-1">
-                    <Label for="new">New password</Label>
-                    <Input id="new" type="password" />
+                    <Label for="new">Фамилия</Label>
+                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
                   </div>
+                  <div class="space-y-1">
+                    <Label for="new">Логин</Label>
+                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                  </div>
+                  <div class="space-y-1">
+                    <Label for="new">Почта</Label>
+                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                  </div>
+                  <div class="space-y-1">
+                    <Label for="new">Адрес проживания</Label>
+                    <Input id="new" class="bg-teal-700 text-white border-none" type="registration" />
+                  </div>
+
                 </CardContent>
                 <CardFooter>
-                  <Button>Save password</Button>
+                  <Button class="bg-teal-500 hover:bg-teal-700 text-white">Зарегистрироваться</Button>
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -193,5 +206,7 @@
 </template>
 
 <script setup lang="ts">
+
+const log_reg_tab = ref(false)
 
 </script>
