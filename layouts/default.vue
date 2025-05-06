@@ -93,11 +93,16 @@
                 <CardContent class="space-y-2">
                   <div class="space-y-1">
                     <Label for="login">Логин</Label>
-                    <Input id="login" class="bg-teal-700 text-white border-none placeholder:text-white/50 focus:placeholder-transparent" placeholder="Ваш логин"  />
+                    <Input id="login" v-model="form_log.login" class="bg-teal-700 text-white border-none placeholder:text-white/50 focus:placeholder-transparent" placeholder="Ваш логин"  />
                   </div>
                   <div class="space-y-1">
                     <Label for="password">Пароль</Label>
-                    <Input id="password" class="bg-teal-700 text-white border-none placeholder:text-white/50 focus:placeholder-transparent" placeholder="Ваш пароль"  type="password"  />
+                     <div class="flex gap-2">
+                        <Input id="password" v-model="form_log.password" :type="show_pass_log ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Ваш пароль для входа"  />
+                        <Button type="button" v-on:click="show_pass_log = !show_pass_log" class=" bg-teal-500 hover:bg-teal-700 p-2 rounded-md">
+                          <Icon :name="show_pass_log ? 'mdi:eye-off' : 'mdi:eye'" class="w-6 h-6 text-white"/>
+                        </Button>
+                      </div>
                   </div>
                 </CardContent>
                 <CardFooter>
@@ -117,24 +122,24 @@
                 <CardContent class="space-y-2">
                   <div class="space-y-1">
                     <Label for="name">Имя</Label>
-                    <Input id="name" v-model="form.name" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" placeholder="Ваше имя. Так к Вам будут обращаться при заказе" />
+                    <Input id="name" v-model="form_reg.name" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" placeholder="Ваше имя. Так к Вам будут обращаться при заказе" />
                   </div>
                   <div class="space-y-1">
                     <Label for="login">Логин</Label>
-                    <Input id="login" v-model="form.login" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="text" placeholder="Ваш логин. По нему осуществляется вход на сайт" />
+                    <Input id="login" v-model="form_reg.login" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="text" placeholder="Ваш логин. По нему осуществляется вход на сайт" />
                   </div>
                   <div class="space-y-1">
                     <Label for="email">Почта</Label>
-                    <Input id="email" v-model="form.email" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="email" placeholder="Ваша почта. Для безопасности аккаунта" />
+                    <Input id="email" v-model="form_reg.email" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="email" placeholder="Ваша почта. Для безопасности аккаунта" />
                   </div>
                   <div class="space-y-1">
                     <Label for="phone">Номер телефона</Label>
-                    <Input id="phone" v-model="form.phone"  class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="tel" placeholder="Ваш номер. Детали заказа по звонку"  />
+                    <Input id="phone" v-model="form_reg.phone"  class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="tel" placeholder="Ваш номер. Детали заказа по звонку"  />
                   </div>
                   <div class="space-y-1">
                     <Label for="password"  >Пароль</Label>
                     <div class="flex gap-2">
-                      <Input id="password" v-model="form.password" :type="show_pass ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Ваш пароль. Он будет использоваться для входа"  />
+                      <Input id="password" v-model="form_reg.password" :type="show_pass ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Ваш пароль. Он будет использоваться для входа"  />
                       <Button type="button" v-on:click="show_pass = !show_pass" class=" bg-teal-500 hover:bg-teal-700 p-2 rounded-md">
                         <Icon :name="show_pass ? 'mdi:eye-off' : 'mdi:eye'" class="w-6 h-6 text-white"/>
                       </Button>
@@ -145,7 +150,7 @@
                   <div class="space-y-1">
                     <Label for="password_conf">Повторный пароль</Label>
                     <div class="flex gap-2">
-                      <Input id="password_conf" v-model="form.password_conf" :type="show_confirm ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Повторный пароль. Для проверки"  />
+                      <Input id="password_conf" v-model="form_reg.password_conf" :type="show_confirm ? 'text' : 'password'" class="bg-teal-700 text-white border-none focus:placeholder-transparent placeholder:text-white/50" type="password" placeholder="Повторный пароль. Для проверки"  />
                       <Button type="button" v-on:click="show_confirm = !show_confirm" class="bg-teal-500 hover:bg-teal-700 p-2 rounded-md">
                         <Icon :name="show_confirm ? 'mdi:eye-off' : 'mdi:eye'" class="w-6 h-6 text-white"/>
                       </Button>
@@ -238,7 +243,7 @@
 
 const log_reg_tab = ref(false)
 
-const form = reactive({
+const form_reg = reactive({
   name:     '',
   login:    '',
   email:    '',
@@ -247,11 +252,17 @@ const form = reactive({
   password_conf:  '',
 })
 
+const form_log = reactive({
+  login:    '',
+  password: '',
+})
+
 const show_pass    = ref(false)
+const show_pass_log    = ref(false)
 const show_confirm = ref(false)
 
 const passwordsMatch = computed(
-    () => form.password !== '' && form.password === form.password_conf
+    () => form_reg.password !== '' && form_reg.password === form_reg.password_conf
 )
 
 </script>
