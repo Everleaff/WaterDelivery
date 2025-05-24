@@ -64,6 +64,7 @@
 <!--            </div>-->
 
             <div class="flex space-x-4">
+              <NuxtLink to="/cart" class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Корзина</NuxtLink>
               <button class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" v-on:click="log_reg_tab = !log_reg_tab; open_login_modal()">Аккаунт</button>
             </div>
 
