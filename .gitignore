@@ -142,6 +142,8 @@ dist
 .nitro
 .cache
 dist
+auto-imports.d.ts
+components.d.ts
 
 # Misc
 .DS_Store
