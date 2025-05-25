@@ -5,3 +5,7 @@ pymysql
 python-dotenv
 alembic
 pymysql
+python-jose
+pydantic[email]
+passlib
+python-multipart
