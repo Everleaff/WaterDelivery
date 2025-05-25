@@ -174,3 +174,11 @@ cython_debug/
 .pypirc
 
 app/utils/security.py
+
+.data/
+.idea/WaterDeliveryFront.iml
+.idea/
+.nuxt/
+auto-imports.d.ts
+components.d.ts
+node_modules/
