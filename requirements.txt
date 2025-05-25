@@ -9,3 +9,4 @@ python-jose
 pydantic[email]
 passlib
 python-multipart
+cryptography

@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
+from passlib.hash import bcrypt
+
 from app.db.database import SessionLocal
 from app.db.models.users import User
 from app.db.models.orders import Order
@@ -25,7 +27,11 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    db_user = User(**user.dict())
+    db_user = User(
+        email=user.email,
+        full_name=user.full_name,
+        hashed_password=bcrypt.hash(user.password)
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
