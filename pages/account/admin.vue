@@ -228,11 +228,24 @@
         <div v-else class="text-center text-base-content-secondary mt-2">Курьеров пока нет</div>
       </section>
 
+      <!-- --- Логи --- -->
+      <section v-if="section==='logs'">
+        <div class="text-center font-bold text-2xl text-red-600 text-base-content-secondary mt-2">Логи пока не реализованы</div>
+      </section>
+
       <!-- --- Поисковик --- -->
       <div class="flex gap-2 mt-4 items-center justify-center" v-if="section !== null || '' ">
+        <select v-model="selectedColumn"  class="select select-bordered w-40">
+          <option value="">Все столбцы</option>
+          <option v-for="col in filterColumns[section]" :key="col.value" :value="col.value">
+            {{ col.label }}
+          </option>
+        </select>
         <button class="btn btn-sm bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700"  @click="applySearch">🔍 Поиск</button>
-        <input v-model="searchQuery" type="text" class="input input-bordered w-60" placeholder="Поиск по имени или email..." />
+        <input v-model="searchQuery" type="text" class="input input-bordered w-60" :placeholder="`Поиск по ${selectedColumn ? filterColumns[section].find(col => col.value === selectedColumn).label : 'всем столбцам'}...`" />
         <button class="btn btn-sm btn-error text-white bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900"  v-if="searchQuery" @click="clearSearch">✖️ Очистить</button>
+        <button class="btn btn-xs  shadow-none hover:shadow-none border-none text-white bg-white/0 !active:bg-none hover:bg-none"  v-if="search_clear === false"  @click="search_clear = !search_clear">✅ Очищать поиск при смене выгрузки</button>
+        <button class="btn btn-xs  shadow-none hover:shadow-none border-none text-white bg-white/0 !active:bg-none hover:bg-none"  v-else-if="search_clear === true"  @click="search_clear = !search_clear">✖️ Очищать поиск при смене выгрузки</button>
       </div>
     </div>
   </div>
@@ -241,7 +254,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { navigateTo } from '#app'
-import empty from "mocked-exports/empty";
 
 const API_URL_USERS = 'http://0.0.0.0:80/users/'
 const API_URL_PRODUCTS = 'http://0.0.0.0:80/products/'
@@ -249,8 +261,13 @@ const API_URL_ORDERS = 'http://0.0.0.0:80/orders/'
 const API_URL_COURIERS = 'http://0.0.0.0:80/delivery/couriers/'
 
 const section = ref('users')
+const search_clear = ref(false)
 
 function showSection(sec: string) {
+  if (search_clear.value === false)
+  {
+    clearSearch()
+  }
   section.value = sec
   if (sec === 'users') fetchUsers()
   if (sec === 'products') fetchProducts()
@@ -258,13 +275,41 @@ function showSection(sec: string) {
   if (sec === 'delivery') fetchCouriers()
 }
 // =============== Поисковик ===============
+
+const filterColumns = {
+  users: [
+    { value: 'full_name', label: 'Имя' },
+    { value: 'email', label: 'Email' },
+  ],
+  products: [
+    { value: 'name', label: 'Название' },
+    { value: 'description', label: 'Описание' },
+  ],
+  orders: [
+    { value: 'user_name', label: 'Имя пользователя' },
+    { value: 'status', label: 'Статус' },
+    { value: 'product_name', label: 'Товар' }
+  ],
+  delivery: [
+    { value: 'name', label: 'Имя курьера' },
+    { value: 'phone', label: 'Телефон' }
+  ],
+}
+
+const selectedColumn = ref('')
 const searchQuery = ref('')
+
 const filteredUsers = computed(() => {
   if (!searchQuery.value.trim()) return users.value
   const q = searchQuery.value.trim().toLowerCase()
+  if (!selectedColumn.value){
+    return users.value.filter(u =>
+        (u.full_name && u.full_name.toLowerCase().includes(q)) ||
+        (u.email && u.email.toLowerCase().includes(q))
+    )
+  }
   return users.value.filter(u =>
-      (u.full_name && u.full_name.toLowerCase().includes(q)) ||
-      (u.email && u.email.toLowerCase().includes(q))
+      (u[selectedColumn.value] && u[selectedColumn.value].toLowerCase().includes(q))
   )
 })
 
@@ -273,22 +318,45 @@ const filteredUsers = computed(() => {
 const filteredProducts = computed(() => {
   if (!searchQuery.value.trim()) return products.value
   const q = searchQuery.value.trim().toLowerCase()
+  if (!selectedColumn.value){
   return products.value.filter(p =>
       (p.name && p.name.toLowerCase().includes(q)) ||
       (p.description && p.description.toLowerCase().includes(q))
+  )
+  }
+  return products.value.filter(p =>
+      (p[selectedColumn.value] && p[selectedColumn.value].toLowerCase().includes(q))
   )
 })
 
 const filteredOrders = computed(() => {
   if (!searchQuery.value.trim()) return orders.value
   const q = searchQuery.value.trim().toLowerCase()
-  return orders.value.filter(o =>
-      (getUserName(o.user_id) && getUserName(o.user_id).toLowerCase().includes(q)) ||
-      (o.status && o.status.toLowerCase().includes(q)) ||
-      (Array.isArray(o.items) && o.items.some(item => {
-        const productName = getProductName(item.product_id)
-        return productName && productName.toLowerCase().includes(q)}))
-  )
+  if (!selectedColumn.value) {
+    return orders.value.filter(o =>
+        (getUserName(o.user_id) && getUserName(o.user_id).toLowerCase().includes(q)) ||
+        (o.status && o.status.toLowerCase().includes(q)) ||
+        (Array.isArray(o.items) && o.items.some(item => {
+          const productName = getProductName(item.product_id)
+          return productName && productName.toLowerCase().includes(q)
+        }))
+    )
+  }
+  if (selectedColumn.value === 'user_name') {
+    return orders.value.filter(o => (getUserName(o.user_id) && getUserName(o.user_id).toLowerCase().includes(q)))
+  }
+  if (selectedColumn.value === 'status') {
+    return orders.value.filter(o => (o.status && o.status.toLowerCase().includes(q)))
+  }
+  if (selectedColumn.value === 'product_name') {
+    return orders.value.filter(o =>
+            Array.isArray(o.items) && o.items.some(item => {
+              const productName = getProductName(item.product_id)
+              return productName && productName.toLowerCase().includes(q)
+            })
+    )
+  }
+  return orders.value
 })
 
 const filteredDelivery = computed(() => {
@@ -440,5 +508,9 @@ onMounted(() => {
   fetchProducts()
   fetchOrders()
   fetchCouriers()
+})
+
+watch(section, () => {
+    selectedColumn.value = ''
 })
 </script>
