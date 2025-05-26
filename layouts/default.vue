@@ -1,13 +1,16 @@
 <template>
   <div class="bg-cyan-600 bg-[url(/img/boloto.jpg)] bg-center bg-cover bg-no-repeat min-h-screen ">
     <div class="text-white flex-row">
-      <div class="sticky top-0 flex justify-between z-10">
+      <div class="sticky top-0 flex justify-between z-10 ">
         <div class="navbar bg-teal-600 pr-4  opacity-90 z-10">
           <div class="navbar-start">
-            <NuxtLink to="/" draggable="false">
+            <NuxtLink to="/" draggable="false" class="flex">
+              <img v-if="route.path === '/delivery'" src="public/img/ЛоготипWaterDelivery1.png" class="w-20 h-14" />
+              <img v-else src="public/img/ЛоготипWaterDelivery2.png" class="w-20 h-14" />
               <button
                   class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 text-xl active:bg-teal-700">
                 Water Delivery
+
               </button>
             </NuxtLink>
           </div>
@@ -300,6 +303,8 @@
 
 const log_reg_tab = ref(false)
 const authUser = useState('authUser', () => null)
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 import { ref, computed, onMounted } from 'vue'
 
@@ -378,7 +383,7 @@ async function registerUser() {
     const response = await $fetch('http://0.0.0.0:80/auth/register', {
       method: 'POST',
       body: {
-        name: form_reg.name,
+        full_name: form_reg.name,
         email: form_reg.email,
         password: form_reg.password,
       }
