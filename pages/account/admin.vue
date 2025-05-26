@@ -32,8 +32,9 @@
           </form>
         </div>
         <div v-if="users.length" class="overflow-x-auto">
-          <table class="table w-full bg-base-100 shadow rounded-lg">
-            <thead>
+          <ScrollArea class="h-100 w-full rounded-md">
+             <table class="table w-full bg-base-100 shadow rounded-lg">
+            <thead class="sticky top-0 bg-base-100">
             <tr>
               <th>ФИО</th><th>Email</th><th>Действия</th>
             </tr>
@@ -57,6 +58,7 @@
             </tr>
             </tbody>
           </table>
+          </ScrollArea>
         </div>
         <div v-else class="text-center text-base-content-secondary mt-2">Пользователей пока нет</div>
       </section>
@@ -82,8 +84,9 @@
           </form>
         </div>
         <div v-if="products.length" class="overflow-x-auto">
-          <table class="table w-full bg-base-100 shadow rounded-lg">
-            <thead>
+          <ScrollArea class="h-100 w-full rounded-md">
+            <table class="table w-full bg-base-100 shadow rounded-lg">
+            <thead class="sticky top-0 bg-base-100">
             <tr>
               <th>Название</th><th>Описание</th><th >Цена</th><th>URL картинки</th><th>Действия</th>
             </tr>
@@ -115,6 +118,7 @@
             </tr>
             </tbody>
           </table>
+          </ScrollArea>
         </div>
         <div v-else class="text-center text-base-content-secondary mt-2">Товаров пока нет</div>
       </section>
@@ -151,13 +155,16 @@
         </div>
         <!-- Таблица заказов -->
         <div v-if="orders.length" class="overflow-x-auto">
-          <table class="table w-full bg-base-100 shadow rounded-lg">
-            <thead>
+          <ScrollArea class="h-100 w-full rounded-md">
+             <table class="table w-full bg-base-100 shadow rounded-lg">
+            <thead class="sticky top-0 bg-base-100">
             <tr>
               <th>ID</th><th>Пользователь</th><th>Статус</th><th>Создан</th><th>Товары</th><th>Действия</th>
             </tr>
             </thead>
+
             <tbody>
+
             <tr v-for="o in filteredOrders" :key="o.id">
               <td>{{ o.id }}</td>
               <td>{{ getUserName(o.user_id) }}</td>
@@ -174,8 +181,11 @@
                 <button class="btn btn-xs btn-ghost self-center bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="deleteOrder(o.id)">🗑️</button>
               </td>
             </tr>
+
             </tbody>
+
           </table>
+          </ScrollArea>
         </div>
         <div v-else class="text-center text-base-content-secondary mt-2">Заказов пока нет</div>
       </section>
@@ -199,9 +209,10 @@
           </form>
         </div>
         <div v-if="couriers.length" class="overflow-x-auto">
-          <table class="table w-full bg-base-100 shadow rounded-lg">
-            <thead>
-            <tr>
+          <ScrollArea class="h-100 w-full rounded-md">
+            <table class="table w-full bg-base-100 shadow rounded-lg">
+            <thead class="sticky top-0 bg-base-100">
+            <tr >
               <th>Имя</th><th>Телефон</th><th>Действия</th>
             </tr>
             </thead>
@@ -224,6 +235,7 @@
             </tr>
             </tbody>
           </table>
+          </ScrollArea>
         </div>
         <div v-else class="text-center text-base-content-secondary mt-2">Курьеров пока нет</div>
       </section>
@@ -254,6 +266,7 @@
 <script setup lang="ts">
 import {ref, reactive, onMounted, computed} from 'vue'
 import {navigateTo, useState} from '#app'
+import {ScrollArea} from "~/components/ui/scroll-area";
 
 const API_URL_USERS = 'http://0.0.0.0:80/users/'
 const API_URL_PRODUCTS = 'http://0.0.0.0:80/products/'

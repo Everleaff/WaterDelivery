@@ -28,7 +28,7 @@
         <div class="text-lg font-semibold mt-2">{{ user.full_name || user.name }}</div>
         <div class="text-white text-shadow-md">{{ user.email }}</div>
         <div v-if="isAdmin" class="mt-3">
-          <NuxtLink to="/account/admin" class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-teal-700" >
+          <NuxtLink to="/account/admin" class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" >
             Перейти в админ-панель
           </NuxtLink>
         </div>
