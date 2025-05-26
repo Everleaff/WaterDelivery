@@ -25,7 +25,7 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == user_in.email).first()
     if user:
         raise HTTPException(status_code=400, detail="Email уже зарегистрирован")
-    hashed_pw = hash_password(user_in.hashed_password)
+    hashed_pw = hash_password(user_in.password)
     new_user = User(
         email=user_in.email,
         full_name=user_in.full_name,

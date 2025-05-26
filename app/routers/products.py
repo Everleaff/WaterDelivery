@@ -15,7 +15,13 @@ def get_db():
 
 @router.post("/", response_model=ProductOut)
 def create_product(product: ProductCreate, db: Session = Depends(get_db)):
-    db_product = Product(**product.dict())
+    image_url = str(product.image_url) if product.image_url is not None else None
+    db_product = Product(
+        name=product.name,
+        description=product.description,
+        price=product.price,
+        image_url=image_url,
+    )
     db.add(db_product)
     db.commit()
     db.refresh(db_product)

@@ -5,6 +5,7 @@ from app.db.database import SessionLocal
 from app.db.models.users import User
 from app.utils.security import verify_password, create_access_token, hash_password
 from datetime import timedelta
+from app.schemas.user import UserCreate
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -31,14 +32,18 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-# 📝 Регистрация (по желанию)
+# 📝 Регистрация
 @router.post("/register")
-def register_user(email: str, full_name: str, password: str, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(User.email == email).first()
+def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    hashed_pwd = hash_password(password)
-    new_user = User(email=email, full_name=full_name, hashed_password=hashed_pwd)
+        raise HTTPException(status_code=400, detail="Почта уже зарегистрирована")
+    hashed_pwd = hash_password(user.password)
+    new_user = User(
+        email=user.email,
+        full_name=user.full_name,
+        hashed_password=hashed_pwd
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

@@ -10,6 +10,8 @@ from app.db.models.orders import Order
 from app.schemas.user import UserCreate, UserUpdate, UserOut
 from app.schemas.orders import OrderOut
 
+from app.auth.dependencies import get_current_user
+
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
@@ -20,13 +22,21 @@ def get_db():
     finally:
         db.close()
 
+@router.get("/me")
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+    }
+
 
 @router.post("/", response_model=UserOut, status_code=status.HTTP_201_CREATED, summary="Создать пользователя")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     """Создаёт нового пользователя."""
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Почта уже зарегистрирована")
     db_user = User(
         email=user.email,
         full_name=user.full_name,
