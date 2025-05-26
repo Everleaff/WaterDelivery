@@ -6,11 +6,13 @@
       <div class="font-semibold text-md text-shadow-md w-full">
         <p class="mb-2">Выбранные товары:</p>
         <div class="bg-black/20 rounded-md w-full p-4 flex flex-col gap-4">
-
+          <p class="self-center" v-if="water_cart.length === 0">Тут пока ничего нет!</p>
 <!--          Тут будет выгрузка карточек выбранных товаров-->
           <div class="w-full h-full bg-teal-600 flex flex-row opacity-95 rounded-md " v-for="water in water_cart" :key="water.productId">
+
             <img :src="water.picture" class="w-62 min-h-42 h-auto opacity-75 rounded-l-md" />
             <div class="flex flex-col justify-between bg-teal-600 w-full rounded-r-md">
+
               <div class="w-full flex flex-row p-4 justify-between">
                 <div>
                   <p class="mb-2">{{water.name}}</p>
