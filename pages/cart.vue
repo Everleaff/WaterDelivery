@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="flex justify-between w-full">
-        <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 p-2 active:bg-teal-700 text-sm  max-w-fit">Перейти к заказу</button>
+        <NuxtLink to="/order" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 p-2 active:bg-teal-700 text-sm  max-w-fit">Перейти к заказу</NuxtLink>
         <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 p-2 active:bg-teal-700 text-sm  max-w-fit">Очистить корзину</button>
       </div>
     </div>
@@ -43,19 +43,45 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref, reactive, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
-const water_cart = reactive([
-  {picture:"img/voda1.jpg", title: "Вода крутая", description:"Это нереально крутая вода", price: 16 + " " + "руб.", count: 1  },
-  {picture:"img/voda2.jpg", title: "Вода чистая", description:"Это реально чистая вода", price: 36 + " " + "руб.", count: 1  },
-  {picture:"img/voda1.jpg", title: "Вода красивая", description:"Красота, а не вода", price: 26 + " " + "руб.", count: 1  },
-  {picture:"img/voda2.jpg", title: "Вода замурчательная", description:"Мур-мур-мур, водичка льется в пасть", price: 116 + " " + "руб.", count: 1  },
+interface Water {
+  productId: number
+  picture: string
+  title: string
+  description: string
+  price: number
+  count: number
+}
 
-])
+const router = useRouter()
 
-// function waterCount( count: number, waterCount :) {
-//   water_cart.forEach((item) => {item.count ++})
-//   return count;
-// }
+const water_cart = ref<Water[]>([])
 
+const loadCart = () => {
+  if (process.client) {
+    const saved = localStorage.getItem('cart')
+    water_cart.value = saved ? JSON.parse(saved) : []
+  }
+}
 
+// Сохранять корзину при изменениях
+watch(water_cart, (val) => {
+  if (process.client) localStorage.setItem('cart', JSON.stringify(val))
+}, { deep: true })
+
+// Изменить количество товара
+const increment = (idx: number) => { water_cart.value[idx].count++ }
+const decrement = (idx: number) => {
+  if (water_cart.value[idx].count > 1) water_cart.value[idx].count--
+}
+// Удалить товар
+const remove = (idx: number) => { water_cart.value.splice(idx, 1) }
+// Очистить корзину полностью
+const clearCart = () => { water_cart.value = []; if (process.client) localStorage.removeItem('cart') }
+// Перейти к оформлению заказа
+const goToOrder = () => router.push('/order')
+
+onMounted(loadCart)
 </script>

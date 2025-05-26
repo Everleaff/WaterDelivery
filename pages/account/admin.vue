@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full p-4">
+  <div class="w-full p-4 pl-30 pr-30">
     <h2 class="text-2xl font-bold mb-4 text-center">Админ-панель</h2>
     <div class=" p-4">
       <!-- Кнопки отображения/взаимодействия -->
@@ -8,7 +8,7 @@
         <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showSection('products')">📦 Товары</button>
         <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showSection('orders')">🛒 Заказы</button>
         <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showSection('delivery')">🚚 Курьеры</button>
-        <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showSection('logs')">📑 Логи</button>
+        <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showSection('logs')" disabled>📑 Логи</button>
         <button class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="logout">↩️ Выйти</button>
       </div>
 

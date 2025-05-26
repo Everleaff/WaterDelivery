@@ -28,23 +28,23 @@
 
     <!-- Шаг 2: форма с контактными данными -->
     <div v-if="currentStep === 2" class="space-y-4">
-      <div class="form-control">
-        <label class="label"><span class="label-text">Имя</span></label>
-        <input type="text" v-model="name" :class="['input w-full', nameError && 'input-error']" />
-        <span v-if="nameError" class="text-error text-sm">{{ nameError }}</span>
+      <div v-if="!isAuth">
+        <div class="alert alert-info text-center">
+          Для оформления заказа нужно войти или зарегистрироваться
+        </div>
+        <div class="flex gap-2 justify-center">
+          <NuxtLink to="/auth/login" class="btn btn-primary">Войти</NuxtLink>
+          <NuxtLink to="/auth/register" class="btn btn-accent">Зарегистрироваться</NuxtLink>
+        </div>
+        <button class="btn btn-outline w-full mt-2" @click="currentStep = 1">← Назад в корзину</button>
       </div>
-      <div class="form-control">
-        <label class="label"><span class="label-text">Телефон</span></label>
-        <input type="tel" v-model="phone" :class="['input w-full', phoneError && 'input-error']" placeholder="+7 ___ ___ __ __" />
-        <span v-if="phoneError" class="text-error text-sm">{{ phoneError }}</span>
+      <div v-else class="flex flex-col items-center gap-3">
+        <div class="text-green-600 text-lg font-medium flex items-center gap-2">
+          <span class="text-2xl">✅</span> Валидация подтверждена, вы можете оформить заказ!
+        </div>
+        <button class="btn btn-primary w-full mt-2" @click="submitOrder">Оформить заказ</button>
+        <button class="btn btn-outline w-full" @click="currentStep = 1">← Назад в корзину</button>
       </div>
-      <div class="form-control">
-        <label class="label"><span class="label-text">Email</span></label>
-        <input type="email" v-model="email" :class="['input w-full', emailError && 'input-error']" />
-        <span v-if="emailError" class="text-error text-sm">{{ emailError }}</span>
-      </div>
-      <button class="btn btn-primary w-full mt-2" @click="submitOrder">Оформить заказ</button>
-      <button class="btn btn-outline w-full" @click="currentStep = 1">← Назад в корзину</button>
     </div>
 
     <!-- Шаг 3: подтверждение результата -->
@@ -59,92 +59,67 @@
       <div class="flex flex-col sm:flex-row sm:justify-center gap-2 mt-4">
         <NuxtLink to="/" class="btn">На главную</NuxtLink>
         <NuxtLink v-if="isAuth" to="/account/profile" class="btn">В профиль</NuxtLink>
-        <NuxtLink to="/water/products" class="btn">К товарам</NuxtLink>
+        <NuxtLink to="/water" class="btn">К товарам</NuxtLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { navigateTo, useState } from '#app'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useState } from '#app'
 
 interface CartItem { productId: number; name: string; price: number; quantity: number }
 
+const router = useRouter()
 const currentStep = ref(1)
 const cartItems = ref<CartItem[]>([])
 
-// Инициализируем поля формы (если пользователь авторизован, заполним позже)
 const name = ref('')
 const phone = ref('')
 const email = ref('')
-
-// Переменные для сообщений/состояния заказа
 const orderSuccess = ref<string | null>(null)
 const orderError = ref<string | null>(null)
-
-// Переменные для сообщений об ошибках полей шага 2
 const nameError = ref<string | null>(null)
 const phoneError = ref<string | null>(null)
 const emailError = ref<string | null>(null)
 
-// Проверка авторизации и автозаполнение
-const user = useState('authUser')  // глобальное состояние авторизованного пользователя
+const user = useState('authUser')
 const isAuth = computed(() => user.value && user.value.id)
+
 onMounted(() => {
-  // Получаем корзину из localStorage (на клиенте)
   if (process.client) {
     const saved = localStorage.getItem('cart')
     cartItems.value = saved ? JSON.parse(saved) : []
   }
-  // Если пользователь авторизован, заполняем данные из профиля
   if (isAuth.value) {
-    name.value = user.value.name || ''
+    name.value = user.value.full_name || user.value.name || ''
     email.value = user.value.email || ''
   }
 })
 
-// Функция отправки заказа (шаг 2 -> шаг 3)
+const total = computed(() => cartItems.value.reduce((acc, item) => acc + item.price * item.quantity, 0))
+
 const submitOrder = async () => {
-  // Очистка сообщений предыдущего шага
-  nameError.value = phoneError.value = emailError.value = null
   orderSuccess.value = orderError.value = null
-
-  // Валидация полей
-  if (!name.value.trim()) {
-    nameError.value = 'Укажите имя'
+  // Проверяем, что пользователь точно залогинен (должно быть всегда на этом шаге)
+  if (!isAuth.value) {
+    orderError.value = 'Вы должны войти или зарегистрироваться для оформления заказа'
+    return
   }
-  if (!phone.value.trim()) {
-    phoneError.value = 'Укажите телефон'
-  }
-  const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/
-  if (!email.value.trim() || !emailPattern.test(email.value)) {
-    emailError.value = 'Некорректный email'
-  }
-  if (nameError.value || phoneError.value || emailError.value) {
-    return  // не переходим к следующему шагу, если есть ошибки
-  }
-
   try {
-    // Формируем данные для API
     const orderData = {
-      user_id: isAuth.value ? user.value.id : null,
-      name: name.value,
-      phone: phone.value,
-      email: email.value,
+      user_id: user.value.id, // только id!
       items: cartItems.value.map(item => ({
         product_id: item.productId,
-        quantity: item.quantity
+        quantity: item.quantity,
+        price: item.price,
       }))
     }
-    const response = await $fetch('/orders/', { method: 'POST', body: orderData })
+    await $fetch('http://0.0.0.0:80/orders/', { method: 'POST', body: orderData })
     orderSuccess.value = 'Заказ успешно оформлен! Спасибо за покупку.'
-    // Опционально: можно обработать response (например, получить номер заказа)
-    // Очистка корзины
     cartItems.value = []
-    if (process.client) {
-      localStorage.removeItem('cart')
-    }
+    if (process.client) localStorage.removeItem('cart')
   } catch (err: any) {
     orderError.value = 'Не удалось оформить заказ. ' + (err.response?.data?.message || err.message || '')
   } finally {
@@ -152,3 +127,4 @@ const submitOrder = async () => {
   }
 }
 </script>
+
