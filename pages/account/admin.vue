@@ -1,7 +1,7 @@
 <template>
-  <div class="max-w-xl mx-auto p-4">
+  <div class="w-full p-4">
     <h2 class="text-2xl font-bold mb-4 text-center">Админ-панель</h2>
-    <div class="max-w-2xl mx-auto p-4">
+    <div class=" p-4">
       <!-- Кнопки отображения/взаимодействия -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mb-6">
         <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showSection('users')">👥 Пользователи</button>
@@ -16,7 +16,7 @@
       <section v-if="section==='users'">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">Пользователи</h3>
-          <button class="btn btn-ghost" @click="showFormUsers = !showFormUsers">➕ Создать пользователя</button>
+          <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showFormUsers = !showFormUsers">➕ Создать пользователя</button>
         </div>
         <div v-if="showFormUsers" class="card bg-base-200 shadow p-4 mb-6">
           <form @submit.prevent="createUser" class="space-y-3">
@@ -24,8 +24,8 @@
             <input v-model="userForm.email" type="email" placeholder="Email" class="input w-full" required />
             <input v-model="userForm.password" type="password" placeholder="Пароль (мин. 6)" class="input w-full" required minlength="6"/>
             <div class="flex gap-2 mt-2">
-              <button type="submit" class="btn btn-primary">Создать</button>
-              <button type="button" class="btn btn-ghost" @click="resetUserForm">Отмена</button>
+              <button type="submit" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Создать</button>
+              <button type="button" class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="resetUserForm">Отмена</button>
             </div>
             <div v-if="userForm.success" class="alert alert-success">{{ userForm.success }}</div>
             <div v-if="userForm.error" class="alert alert-error">{{ userForm.error }}</div>
@@ -39,7 +39,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="u in users" :key="u.id">
+            <tr v-for="u in filteredUsers" :key="u.id">
               <td v-if="editingUserId !== u.id">{{ u.full_name }}</td>
               <td v-else>
                 <input v-model="editUserForm.full_name" class="input input-sm w-full" />
@@ -49,10 +49,10 @@
                 <input v-model="editUserForm.email" class="input input-sm w-full" />
               </td>
               <td class="flex gap-2">
-                <button class="btn btn-xs btn-accent" @click="startEditUser(u)" v-if="editingUserId !== u.id">✏️ Ред.</button>
-                <button class="btn btn-xs btn-success" @click="saveEditUser(u)" v-if="editingUserId === u.id">💾 Сохранить</button>
-                <button class="btn btn-xs btn-ghost" @click="cancelEditUser" v-if="editingUserId === u.id">❌</button>
-                <button class="btn btn-xs btn-error" @click="deleteUser(u.id)">🗑️</button>
+                <button class="btn btn-xs btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700"                            @click="startEditUser(u)" v-if="editingUserId !== u.id">✏️ Ред.</button>
+                <button class="btn btn-xs btn-success text-white bg-emerald-600 border-none hover:shadow-none hover:bg-emerald-700 m-1 active:bg-emerald-700"   @click="saveEditUser(u)" v-if="editingUserId === u.id">💾 Сохранить</button>
+                <button class="btn btn-xs btn-warning self-center border-none m-1"                                                                                      @click="cancelEditUser" v-if="editingUserId === u.id">❌</button>
+                <button class="btn btn-xs btn-error bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900"                          @click="deleteUser(u.id)">🗑️</button>
               </td>
             </tr>
             </tbody>
@@ -65,7 +65,7 @@
       <section v-if="section==='products'">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">Товары</h3>
-          <button class="btn btn-ghost" @click="showFormProducts = !showFormProducts">➕ Создать товар</button>
+          <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showFormProducts = !showFormProducts">➕ Создать товар</button>
         </div>
         <div v-if="showFormProducts" class="card bg-base-200 shadow p-4 mb-6">
           <form @submit.prevent="createProduct" class="space-y-3">
@@ -74,8 +74,8 @@
             <input v-model="productForm.price" type="number" min="0.01" step="0.01" placeholder="Цена" class="input w-full" required />
             <input v-model="productForm.image_url" type="url" placeholder="URL картинки (опционально)" class="input w-full" />
             <div class="flex gap-2 mt-2">
-              <button type="submit" class="btn btn-primary">Создать</button>
-              <button type="button" class="btn btn-ghost" @click="resetProductForm">Отмена</button>
+              <button type="submit" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Создать</button>
+              <button type="button" class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="resetProductForm">Отмена</button>
             </div>
             <div v-if="productForm.success" class="alert alert-success">{{ productForm.success }}</div>
             <div v-if="productForm.error" class="alert alert-error">{{ productForm.error }}</div>
@@ -89,7 +89,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="p in products" :key="p.id">
+            <tr v-for="p in filteredProducts" :key="p.id">
               <td v-if="editingProductId !== p.id">{{ p.name }}</td>
               <td v-else>
                 <input v-model="editProductForm.name" class="input input-sm w-full" />
@@ -107,10 +107,10 @@
                 <input v-model="editProductForm.image_url" class="input input-sm w-full" />
               </td>
               <td class="flex gap-2">
-                <button class="btn btn-xs btn-accent" @click="startEditProduct(p)" v-if="editingProductId !== p.id">✏️</button>
-                <button class="btn btn-xs btn-success" @click="saveEditProduct(p)" v-if="editingProductId === p.id">💾</button>
-                <button class="btn btn-xs btn-ghost" @click="cancelEditProduct" v-if="editingProductId === p.id">❌</button>
-                <button class="btn btn-xs btn-error" @click="deleteProduct(p.id)">🗑️</button>
+                <button class="btn btn-xs btn-ghost  bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700"                           @click="startEditProduct(p)" v-if="editingProductId !== p.id">✏️ Ред.</button>
+                <button class="btn btn-xs btn-success text-white bg-emerald-600 border-none hover:shadow-none hover:bg-emerald-700 m-1 active:bg-emerald-700"     @click="saveEditProduct(p)" v-if="editingProductId === p.id">💾 Сохранить</button>
+                <button class="btn btn-xs btn-warning self-center border-none m-1"                                                                                @click="cancelEditProduct" v-if="editingProductId === p.id">❌</button>
+                <button class="btn btn-xs btn-error bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900"                           @click="deleteProduct(p.id)">🗑️</button>
               </td>
             </tr>
             </tbody>
@@ -123,7 +123,7 @@
       <section v-if="section==='orders'">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">Заказы</h3>
-          <button class="btn btn-ghost" @click="showFormOrders = !showFormOrders">➕ Создать заказ</button>
+          <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showFormOrders = !showFormOrders">➕ Создать заказ</button>
         </div>
         <div v-if="showFormOrders" class="card bg-base-200 shadow p-4 mb-6">
           <form @submit.prevent="createOrder" class="space-y-3">
@@ -138,12 +138,12 @@
               </select>
               <input v-model.number="item.quantity" type="number" min="1" class="input w-1/4" placeholder="Кол-во" required/>
               <input v-model.number="item.price" type="number" min="0.01" step="0.01" class="input w-1/4" placeholder="Цена" required/>
-              <button class="btn btn-xs btn-ghost" type="button" @click="removeOrderItem(idx)">❌</button>
+              <button class="btn btn-xs btn-ghost self-center bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" type="button" @click="removeOrderItem(idx)">🗑️</button>
             </div>
-            <button type="button" class="btn btn-xs btn-accent" @click="addOrderItem">+ Добавить товар</button>
+            <button type="button" class="btn btn-xs bg-emerald-600 border-none hover:shadow-none hover:bg-emerald-700 m-1 active:bg-emerald-700" @click="addOrderItem">+ Добавить товар</button>
             <div class="flex gap-2 mt-2">
-              <button type="submit" class="btn btn-primary">Создать заказ</button>
-              <button type="button" class="btn btn-ghost" @click="resetOrderForm">Отмена</button>
+              <button type="submit" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Создать заказ</button>
+              <button type="button" class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="resetOrderForm">Отмена</button>
             </div>
             <div v-if="orderForm.success" class="alert alert-success">{{ orderForm.success }}</div>
             <div v-if="orderForm.error" class="alert alert-error">{{ orderForm.error }}</div>
@@ -158,7 +158,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="o in orders" :key="o.id">
+            <tr v-for="o in filteredOrders" :key="o.id">
               <td>{{ o.id }}</td>
               <td>{{ getUserName(o.user_id) }}</td>
               <td>{{ o.status }}</td>
@@ -171,7 +171,7 @@
                 </ul>
               </td>
               <td>
-                <button class="btn btn-xs btn-error" @click="deleteOrder(o.id)">🗑️</button>
+                <button class="btn btn-xs btn-ghost self-center bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="deleteOrder(o.id)">🗑️</button>
               </td>
             </tr>
             </tbody>
@@ -184,15 +184,15 @@
       <section v-if="section==='delivery'">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">Курьеры</h3>
-          <button class="btn btn-ghost" @click="showFormDelivery = !showFormDelivery">➕ Создать курьера</button>
+          <button class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700" @click="showFormDelivery = !showFormDelivery">➕ Создать курьера</button>
         </div>
         <div v-if="showFormDelivery" class="card bg-base-200 shadow p-4 mb-6">
           <form @submit.prevent="createCourier" class="space-y-3">
             <input v-model="courierForm.name" placeholder="Имя" class="input w-full" required />
             <input v-model="courierForm.phone" placeholder="Телефон" class="input w-full" required />
             <div class="flex gap-2 mt-2">
-              <button type="submit" class="btn btn-primary">Создать</button>
-              <button type="button" class="btn btn-ghost" @click="resetCourierForm">Отмена</button>
+              <button type="submit" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Создать</button>
+              <button type="button" class="btn btn-ghost bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900" @click="resetCourierForm">Отмена</button>
             </div>
             <div v-if="courierForm.success" class="alert alert-success">{{ courierForm.success }}</div>
             <div v-if="courierForm.error" class="alert alert-error">{{ courierForm.error }}</div>
@@ -206,7 +206,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="c in couriers" :key="c.id">
+            <tr v-for="c in filteredDelivery" :key="c.id">
               <td v-if="editingCourierId !== c.id">{{ c.name }}</td>
               <td v-else>
                 <input v-model="editCourierForm.name" class="input input-sm w-full" />
@@ -216,10 +216,10 @@
                 <input v-model="editCourierForm.phone" class="input input-sm w-full" />
               </td>
               <td class="flex gap-2">
-                <button class="btn btn-xs btn-accent" @click="startEditCourier(c)" v-if="editingCourierId !== c.id">✏️</button>
-                <button class="btn btn-xs btn-success" @click="saveEditCourier(c)" v-if="editingCourierId === c.id">💾</button>
-                <button class="btn btn-xs btn-ghost" @click="cancelEditCourier" v-if="editingCourierId === c.id">❌</button>
-                <button class="btn btn-xs btn-error" @click="deleteCourier(c.id)">🗑️</button>
+                <button class="btn btn-xs btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700"                           @click="startEditCourier(c)" v-if="editingCourierId !== c.id">✏️ Ред.</button>
+                <button class="btn btn-xs btn-success text-white bg-emerald-600 border-none hover:shadow-none hover:bg-emerald-700 m-1 active:bg-emerald-700"     @click="saveEditCourier(c)" v-if="editingCourierId === c.id">💾 Сохранить</button>
+                <button class="btn btn-xs btn-warning self-center border-none m-1"                                                                                @click="cancelEditCourier" v-if="editingCourierId === c.id">❌</button>
+                <button class="btn btn-xs btn-error bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900"                           @click="deleteCourier(c.id)">🗑️</button>
               </td>
             </tr>
             </tbody>
@@ -227,6 +227,13 @@
         </div>
         <div v-else class="text-center text-base-content-secondary mt-2">Курьеров пока нет</div>
       </section>
+
+      <!-- --- Поисковик --- -->
+      <div class="flex gap-2 mt-4 items-center justify-center" v-if="section !== null || '' ">
+        <button class="btn btn-sm bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700"  @click="applySearch">🔍 Поиск</button>
+        <input v-model="searchQuery" type="text" class="input input-bordered w-60" placeholder="Поиск по имени или email..." />
+        <button class="btn btn-sm btn-error text-white bg-red-500/80 border-none hover:shadow-none hover:bg-red-900 m-1 active:bg-red-900"  v-if="searchQuery" @click="clearSearch">✖️ Очистить</button>
+      </div>
     </div>
   </div>
 </template>
@@ -234,6 +241,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { navigateTo } from '#app'
+import empty from "mocked-exports/empty";
 
 const API_URL_USERS = 'http://0.0.0.0:80/users/'
 const API_URL_PRODUCTS = 'http://0.0.0.0:80/products/'
@@ -249,6 +257,56 @@ function showSection(sec: string) {
   if (sec === 'orders') fetchOrders()
   if (sec === 'delivery') fetchCouriers()
 }
+// =============== Поисковик ===============
+const searchQuery = ref('')
+const filteredUsers = computed(() => {
+  if (!searchQuery.value.trim()) return users.value
+  const q = searchQuery.value.trim().toLowerCase()
+  return users.value.filter(u =>
+      (u.full_name && u.full_name.toLowerCase().includes(q)) ||
+      (u.email && u.email.toLowerCase().includes(q))
+  )
+})
+
+
+
+const filteredProducts = computed(() => {
+  if (!searchQuery.value.trim()) return products.value
+  const q = searchQuery.value.trim().toLowerCase()
+  return products.value.filter(p =>
+      (p.name && p.name.toLowerCase().includes(q)) ||
+      (p.description && p.description.toLowerCase().includes(q))
+  )
+})
+
+const filteredOrders = computed(() => {
+  if (!searchQuery.value.trim()) return orders.value
+  const q = searchQuery.value.trim().toLowerCase()
+  return orders.value.filter(o =>
+      (getUserName(o.user_id) && getUserName(o.user_id).toLowerCase().includes(q)) ||
+      (o.status && o.status.toLowerCase().includes(q)) ||
+      (Array.isArray(o.items) && o.items.some(item => {
+        const productName = getProductName(item.product_id)
+        return productName && productName.toLowerCase().includes(q)}))
+  )
+})
+
+const filteredDelivery = computed(() => {
+  if (!searchQuery.value.trim()) return couriers.value
+  const q = searchQuery.value.trim().toLowerCase()
+  return couriers.value.filter(d =>
+      (d.name && d.name.toLowerCase().includes(q)) ||
+      (d.phone && d.phone.toLowerCase().includes(q))
+  )
+})
+
+
+
+const applySearch = () => { /* для дальнейших доработок, вдруг что нужно */ }
+const clearSearch = () => { searchQuery.value = '' }
+
+
+
 
 // =============== Пользователи ===============
 const showFormUsers = ref(false)
