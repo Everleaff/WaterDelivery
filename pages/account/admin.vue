@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full p-4 pl-30 pr-30">
+  <div v-if="isAdmin" class="w-full p-4 pl-30 pr-30">
     <h2 class="text-2xl font-bold mb-4 text-center">Админ-панель</h2>
     <div class=" p-4">
       <!-- Кнопки отображения/взаимодействия -->
@@ -252,8 +252,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { navigateTo } from '#app'
+import {ref, reactive, onMounted, computed} from 'vue'
+import {navigateTo, useState} from '#app'
 
 const API_URL_USERS = 'http://0.0.0.0:80/users/'
 const API_URL_PRODUCTS = 'http://0.0.0.0:80/products/'
@@ -502,6 +502,9 @@ async function logout() {
   try { await $fetch('/logout', { method: 'POST' }) } catch {}
   await navigateTo('/')
 }
+
+const user = useState('authUser', () => null)
+const isAdmin = computed(() => user.value && user.value.email === 'admin@mail.ru')
 
 onMounted(() => {
   fetchUsers()

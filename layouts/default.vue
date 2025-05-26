@@ -94,8 +94,8 @@
               <div v-if="authUser && authUser.full_name" class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">{{ authUser.full_name }}</div>
                 <ul tabindex="0" class="menu dropdown-content bg-teal-700 rounded-box z-20 w-52 p-2 shadow-sm mt-2">
-                  <li><NuxtLink to="account/profile">Профиль</NuxtLink></li>
-                  <li><a v-on:click="logout">Выйти</a></li>
+                  <li><NuxtLink to="/account/profile" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Профиль</NuxtLink></li>
+                  <li><a v-on:click="logout" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Выйти</a></li>
                 </ul>
               </div>
               <button v-else class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700"
