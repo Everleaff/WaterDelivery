@@ -3,23 +3,25 @@
     <h2 class="text-2xl font-bold mb-4 text-center">Оформление заказа</h2>
 
     <!-- Индикатор шагов -->
-    <ul class="steps steps-horizontal mb-6">
-      <li :class="['step', currentStep > 1 ? 'step-primary' : 'step-neutral']">Корзина</li>
-      <li :class="['step', currentStep > 2 ? 'step-primary' : (currentStep === 2 ? 'step-primary' : 'step-neutral')]">Данные</li>
-      <li :class="['step', currentStep === 3 ? 'step-primary' : 'step-neutral']">Готово</li>
+    <ul class="steps steps-horizontal mb-6 w-full">
+      <li :class="['step', currentStep > 1 ? 'step-success' : 'step-success']">Корзина</li>
+      <li :class="['step', currentStep > 2 ? 'step-success' : (currentStep === 2 ? 'step-success' : 'step-neutral')]">Данные</li>
+      <li :class="['step', currentStep === 3 ? 'step-success' : 'step-neutral']">Готово</li>
+
     </ul>
+
 
     <!-- Шаг 1: подтверждение товаров в корзине -->
     <div v-if="currentStep === 1" class="space-y-4">
-      <div v-for="item in cartItems" :key="item.productId" class="flex justify-between items-center border-b pb-2">
-        <span>{{ item.name }} (x{{ item.quantity }})</span>
+      <div v-for="item in cartItems" :key="item.productId" class="flex justify-between items-center border-b pb-4 border-teal-600">
+        <span class="font-semibold">{{ item.name }} (x{{ item.quantity }})</span>
         <span>{{ item.price * item.quantity }} ₽</span>
       </div>
       <div v-if="cartItems.length === 0" class="text-center text-gray-600">
         Ваша корзина пуста.
       </div>
       <button
-          class="btn btn-primary mt-4 w-full"
+          class="btn btn-block bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-4"
           :disabled="cartItems.length === 0"
           @click="currentStep = 2">
         Подтвердить товары
@@ -29,21 +31,21 @@
     <!-- Шаг 2: форма с контактными данными -->
     <div v-if="currentStep === 2" class="space-y-4">
       <div v-if="!isAuth">
-        <div class="alert alert-info text-center">
-          Для оформления заказа нужно войти или зарегистрироваться
+        <div class="alert text-black font-semibold alert-warning place-content-center opacity-75">
+         <p class="text-center">Для оформления заказа нужно войти или зарегистрироваться</p>
         </div>
-        <div class="flex gap-2 justify-center">
-          <NuxtLink to="/auth/login" class="btn btn-primary">Войти</NuxtLink>
-          <NuxtLink to="/auth/register" class="btn btn-accent">Зарегистрироваться</NuxtLink>
+        <div class="flex gap-2 m-1 justify-center">
+          <button to="/auth/login" class="btn btn-ghost w-60 bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8" v-on:click="open_login_modal && open_login_modal()">Войти</button>
+          <button to="/auth/register" class="btn btn-ghost w-60 bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8" v-on:click="open_auth_modal && open_auth_modal()">Зарегистрироваться</button>
         </div>
-        <button class="btn btn-outline w-full mt-2" @click="currentStep = 1">← Назад в корзину</button>
+        <button class="btn btn-block bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 active:bg-teal-700 mt-8" @click="currentStep = 1">Назад к оформлению</button>
       </div>
       <div v-else class="flex flex-col items-center gap-3">
-        <div class="text-green-600 text-lg font-medium flex items-center gap-2">
+        <div class="text-green-600 text-lg font-semibold  flex items-center gap-2">
           <span class="text-2xl">✅</span> Валидация подтверждена, вы можете оформить заказ!
         </div>
-        <button class="btn btn-primary w-full mt-2" @click="submitOrder">Оформить заказ</button>
-        <button class="btn btn-outline w-full" @click="currentStep = 1">← Назад в корзину</button>
+        <button class="btn btn-block bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8" @click="submitOrder">Оформить заказ</button>
+        <button class="btn btn-block bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8" @click="currentStep = 1">Назад к оформлению</button>
       </div>
     </div>
 
@@ -126,5 +128,8 @@ const submitOrder = async () => {
     currentStep.value = 3
   }
 }
+
+const open_auth_modal = inject<() => void>('open_auth_modal')
+const open_login_modal = inject<() => void>('open_login_modal')
 </script>
 

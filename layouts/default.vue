@@ -73,10 +73,21 @@
             <!--            </div>-->
 
             <div class="flex space-x-4">
-              <NuxtLink to="/cart"
-                        class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">
-                Корзина
-              </NuxtLink>
+
+              <div class="indicator">
+                <span v-if="cartCount"
+                      class="indicator-item indicator-start sm:indicator-middle md:indicator-bottom lg:indicator-center xl:indicator-end badge badge-secondary w-4 bg-emerald-700 opacity-95">{{ cartCount }}</span>
+                <NuxtLink to="/cart"
+                          class="btn btn-ghost border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">
+                  Корзина
+                </NuxtLink>
+              </div>
+              <div v-if="toastText" class="toast toast-center z-[9999] mb-6">
+                <div class="text-white font-semibold" :class="['alert', toastType === 'success' ? 'alert-success' : 'alert-info']">
+                  <span>{{ toastText }}</span>
+                </div>
+              </div>
+
               <div v-if="authUser && authUser.full_name" class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">{{ authUser.full_name }}</div>
                 <ul tabindex="0" class="menu dropdown-content bg-teal-700 rounded-box z-20 w-52 p-2 shadow-sm mt-2">
@@ -98,7 +109,7 @@
              v-if="log_reg_tab===true" v-on:click.self="closeForm">
           <div class="absolute !z-30  h-full w-1/3 place-items-center justify-center flex fixed"
                v-if="log_reg_tab===true" v-on:dblclick.self="closeForm">
-            <Tabs v-model="log_reg_modal_type" class="w-[400px] z-30 ">
+            <Tabs v-model="log_reg_modal_type" class="w-[400px] !z-30 ">
               <TabsList class="grid w-full grid-cols-2 bg-teal-600  gap-4 ">
                 <TabsTrigger value="login"
                              class="!text-white border-none font-semibold data-[state=active]:bg-teal-700">
@@ -290,53 +301,70 @@
 const log_reg_tab = ref(false)
 const authUser = useState('authUser', () => null)
 
+import { ref, computed, onMounted } from 'vue'
+
+const cartCount = ref(0)
+function getCartCount() {
+  if (process.client) {
+    // ВАЖНО! — теперь считаем уникальные товары
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    cartCount.value = cart.length
+  }
+}
+function refreshCart() {
+  getCartCount()
+}
+onMounted(() => {
+  getCartCount()
+  window.addEventListener('storage', getCartCount)
+})
+const toastText = ref('')
+const toastType = ref('info')
+function showToast(text, type = 'info') {
+  toastText.value = text
+  toastType.value = type
+  setTimeout(() => toastText.value = '', 1800)
+}
+if (process.client) {
+  window.showToast = showToast
+  window.refreshCart = refreshCart
+}
+
 function closeForm() {
   log_reg_tab.value = false
   resetForms();
 }
-
-
 const form_reg = reactive({
   name: '',
   email: '',
   password: '',
   password_conf: '',
 })
-
 function resetForms() {
   form_reg.name = ''
   form_reg.email = ''
   form_reg.password = ''
   form_reg.password_conf = ''
 }
-
 const form_log = reactive({
   email: '',
   password: '',
 })
-
 const show_pass = ref(false)
 const show_pass_log = ref(false)
 const show_confirm = ref(false)
-
 const passwordsMatch = computed(
     () => form_reg.password !== '' && form_reg.password === form_reg.password_conf
 )
-
 const log_reg_modal_type = ref("login")
-
 function open_login_modal() {
-
   log_reg_modal_type.value = "login"
   log_reg_tab.value = true
 }
-
 function open_auth_modal() {
-
   log_reg_modal_type.value = "registration"
   log_reg_tab.value = true
 }
-
 async function registerUser() {
   if (!form_reg.name.trim() || !form_reg.email.trim() || !form_reg.password.trim()) {
     alert('Пожалуйста, заполните все поля');
@@ -346,7 +374,6 @@ async function registerUser() {
     alert('Пароли не совпадают');
     return;
   }
-
   try {
     const response = await $fetch('http://0.0.0.0:80/auth/register', {
       method: 'POST',
@@ -356,27 +383,22 @@ async function registerUser() {
         password: form_reg.password,
       }
     });
-    // Записать пользователя в стор/стейт, чтобы отобразить его имя!
-    authUser.value = response; // где authUser — глобальный useState('authUser')
-    log_reg_tab.value = false; // Закрываем модалку
+    authUser.value = response;
+    log_reg_tab.value = false;
     resetForms();
   } catch (e: any) {
     alert(e.data?.message || e.message || 'Ошибка регистрации');
   }
 }
-
 async function loginUser() {
   if (!form_log.email.trim() || !form_log.password.trim()) {
     alert('Введите логин и пароль');
     return;
   }
-
   try {
-    // Формируем form-urlencoded данные
     const body = new URLSearchParams();
     body.append('username', form_log.email);
     body.append('password', form_log.password);
-
     const response = await $fetch('http://0.0.0.0:80/auth/login', {
       method: 'POST',
       body,
@@ -384,29 +406,23 @@ async function loginUser() {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
-
     const accessToken = response.access_token;
-
     const user = await $fetch('http://0.0.0.0:80/users/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     });
-
-    authUser.value = user; // Теперь тут будет name/email/id и прочее
+    authUser.value = user;
     log_reg_tab.value = false;
     resetForms();
   } catch (e: any) {
     alert(e.data?.message || e.message || 'Ошибка входа');
   }
 }
-
-
 function logout(){
   { authUser.value = null }
 }
-
-
 provide('open_auth_modal', open_auth_modal)
+provide('open_login_modal', open_login_modal)
 
 </script>
