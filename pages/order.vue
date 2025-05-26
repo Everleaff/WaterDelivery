@@ -51,17 +51,30 @@
 
     <!-- Шаг 3: подтверждение результата -->
     <div v-if="currentStep === 3" class="text-center space-y-4">
-      <div v-if="orderSuccess" class="text-green-600 text-xl font-medium">
+      <div v-if="orderSuccess" class="text-green-600 text-xl font-semibold">
         ✅ {{ orderSuccess }}
+
+        <dialog id="orderSuccessModal" class="modal">
+          <div class="modal-box">
+            <h3 class="text-xl font-bold text-white">Спасибо за заказ, ожидайте!</h3>
+            <p class="py-4 text-start font-medium text-white text-[16px]">Возврат тары осуществляется при следующей доставке.<br> Просто передайте пустые бутыли курьеру!</p>
+            <div class="modal-action">
+              <form method="dialog">
+                <button class="btn btn-block bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700">Закрыть</button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+
       </div>
       <div v-if="orderError" class="text-error text-xl font-medium">
         ⚠️ {{ orderError }}
       </div>
       <!-- Кнопки навигации после заказа -->
       <div class="flex flex-col sm:flex-row sm:justify-center gap-2 mt-4">
-        <NuxtLink to="/" class="btn">На главную</NuxtLink>
-        <NuxtLink v-if="isAuth" to="/account/profile" class="btn">В профиль</NuxtLink>
-        <NuxtLink to="/water" class="btn">К товарам</NuxtLink>
+        <NuxtLink to="/" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8">На главную</NuxtLink>
+        <NuxtLink v-if="isAuth" to="/account/profile" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8">В профиль</NuxtLink>
+        <NuxtLink to="/water" class="btn btn-ghost bg-teal-600 border-none hover:shadow-none hover:bg-teal-700 m-1 active:bg-teal-700 mt-8">К товарам</NuxtLink>
       </div>
     </div>
   </div>
@@ -76,6 +89,9 @@ interface CartItem { productId: number; name: string; price: number; quantity: n
 const router = useRouter()
 const currentStep = ref(1)
 const cartItems = ref<CartItem[]>([])
+
+
+
 
 const name = ref('')
 const phone = ref('')
@@ -100,6 +116,16 @@ onMounted(() => {
   }
 })
 
+
+
+watch(orderSuccess, async (val) => {
+  if (val) {
+    await nextTick();
+    const dlg = document.getElementById('orderSuccessModal');
+    if (dlg) dlg.showModal();
+  }
+});
+
 const total = computed(() => cartItems.value.reduce((acc, item) => acc + item.price * item.quantity, 0))
 
 const submitOrder = async () => {
@@ -119,9 +145,10 @@ const submitOrder = async () => {
       }))
     }
     await $fetch('http://0.0.0.0:80/orders/', { method: 'POST', body: orderData })
-    orderSuccess.value = 'Заказ успешно оформлен! Спасибо за покупку.'
+    orderSuccess.value = 'Заказ успешно оформлен!'
     cartItems.value = []
     if (process.client) localStorage.removeItem('cart')
+    window.refreshCart && window.refreshCart()
   } catch (err: any) {
     orderError.value = 'Не удалось оформить заказ. ' + (err.response?.data?.message || err.message || '')
   } finally {

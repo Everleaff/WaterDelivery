@@ -56,20 +56,50 @@
 
         <template v-if="index === 3">
           <h2 class="text-5xl font-bold mb-12 animate-zoomIn text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">Наши товары</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="card h-150 image-full w-96 shadow-xl animate-fadeInUp hover:scale-105 transition-transform "
-                 @mouseover="hover=true; blur_card='backdrop-blur-sm'"
-                 @mouseleave="hover=false; blur_card=''"
-                 data-aos-delay="200">
-              <figure><img src="/img/voda1.jpg" alt="Вода" class="object-cover w-full h-full rounded-2xl" /></figure>
-              <div class="card-body transition-all " :class="blur_card">
-                <h2 class="card-title justify-center lg:text-[3rem] text-center animate-zoomIn text-teal-300">Вода из раковины</h2>
-                <div class="border border-teal-600/50 rounded-full opacity-75 w-full my-4 animate-pulse"></div>
-                <div class="flex justify-center mb-6">
-                  <p v-if="hover" class="text-lg animate-slideUp text-gray-200">Ржавчина - 50, магний - 20, вкуснота - 10</p>
-                  <p v-else class="text-lg animate-slideUp text-gray-200">Артезианская вода с природными минералами.</p>
+          <div class="flex flex-wrap justify-center p-8 h-auto">
+            <div v-for="product in products" :key="product.id"
+                 class="card w-72 h-[400px] image-full shadow-sm m-6 mb-12 relative overflow-hidden group transition-all duration-200"
+                 v-on:mouseover="hoverCard = product.id" v-on:mouseleave="hoverCard = null">
+              <figure>
+                <img
+                    :src="product.image_url || '/img/voda1.jpg'"
+                    :alt="product.name"
+                    class="w-full h-48 object-cover rounded-t-md"
+                />
+              </figure>
+              <div class="card-body transition-all duration-200"
+                   :class="hoverCard !== product.id ? 'opacity-100 z-2' : 'opacity-0 z-0 absolute top-0 left-0 w-full h-full'">
+                <h2 class="card-title justify-center text-xl mb-2 text-center">
+                  {{ product.name }}
+                </h2>
+                <div class="border-1 border-teal-600/50 rounded-full opacity-75 w-full mb-6 mt-2"></div>
+                <div class="flex-1 flex items-center justify-center text-center text-white/90 text-sm">
+                  {{ getFirstSentence(product.description) }}
                 </div>
-                <button class="btn btn-ghost border-none hover:shadow-xl hover:bg-teal-700 active:bg-teal-700 bg-teal-600 w-full animate-pulse text-white px-6 py-3 rounded-full shadow-lg transition-all ">Добавить в корзину</button>
+                <div class="card-actions justify-center font-semibold space-x-1 mt-4">
+                  <span class="text-lg text-emerald-100 font-bold">{{ product.price }} ₽</span>
+                  <button
+                      class="btn btn-ghost border-none shadow-md shadow-emerald-800 hover:shadow-emerald-900 hover:bg-emerald-700 p-2 bg-emerald-500 w-full mt-2"
+                      @click="addToCart(product)">
+                    Добавить в корзину
+                  </button>
+                </div>
+              </div>
+              <div class="card-body absolute top-0 left-0 w-full h-full  backdrop-blur-sm flex flex-col justify-between
+        opacity-0 group-hover:opacity-100 transition-all duration-300 z-5">
+                <h2 class="card-title justify-center text-xl mb-2 text-center text-white">{{ product.name }}</h2>
+                <div class="border-1 border-teal-400/70 rounded-full opacity-80 w-full mb-4"></div>
+                <div class="flex-1 flex items-center justify-center text-center text-white/90 text-sm px-2">
+                  {{ product.description }}
+                </div>
+                <div class="card-actions justify-center font-semibold space-x-1 mt-2 ">
+                  <span class="text-lg text-emerald-100 font-bold ">{{ product.price }} ₽</span>
+                  <button
+                      class="btn btn-ghost border-none shadow-md shadow-emerald-800 hover:shadow-emerald-900 hover:bg-emerald-700 p-2 bg-emerald-500 w-full mt-2"
+                      @click="addToCart(product)">
+                    Добавить в корзину
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -77,7 +107,12 @@
 
         <template v-if="index === 4">
           <h2 class="text-5xl font-bold mb-12 animate-zoomIn text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">Сайт и поставщики</h2>
-          <p class="text-xl animate-slideUp text-gray-200">Мы сотрудничаем сами с собой, потому что мы самые крутые!</p>
+          <p class="text-xl animate-slideUp text-gray-200">Быстрая сборка заказа, опытные курьеры!</p>
+          <p class="text-xl animate-slideUp text-gray-200">Обширная зона доставки!</p>
+          <div class="flex justify-center mt-12 ">
+            <img class="shadow shadow-black w-156 h-120" src="public/img/deliveryRadius.png"/>
+          </div>
+
         </template>
 
         <template v-if="index === 5">
@@ -91,6 +126,8 @@
 </template>
 
 <style scoped>
+
+
 section {
   background: transparent;
 }
@@ -145,6 +182,44 @@ section {
 <script setup lang="ts">
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { ref, onMounted } from 'vue'
+const products = ref([])
+const hoverCard = ref<number | null>(null)
+onMounted(async () => {
+  try {
+    products.value = await $fetch('http://0.0.0.0:80/products/')
+  } catch (e) {
+    products.value = []
+  }
+})
+function getFirstSentence(text: string) {
+  if (!text) return ''
+  const m = text.match(/^.*?[.!?](?=\s|$)/)
+  return m ? m[0] : text.split('\n')[0]
+}
+const addToCart = (product) => {
+  let cart = []
+  if (process.client) {
+    cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    const found = cart.find(item => item.productId === product.id)
+    if (found) {
+      found.quantity++
+      window.showToast && window.showToast('Ещё 1 шт. товара добавлено в корзину', 'info')
+    } else {
+      cart.push({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        picture: product.image_url || '/img/voda1.jpg',
+        description: product.description,
+      })
+      window.showToast && window.showToast('Товар добавлен в корзину', 'success')
+    }
+    localStorage.setItem('cart', JSON.stringify(cart))
+    window.refreshCart && window.refreshCart()
+  }
+}
 
 const currentSection = ref(0)
 const hover = ref(false)

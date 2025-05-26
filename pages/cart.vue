@@ -19,7 +19,7 @@
                   <p class="mb-2 font-medium text-white/80">{{water.description}}</p>
                 </div>
                 <div>
-                  <p>{{ water.price }}</p>
+                  <p>{{ water.price }} ₽</p>
                 </div>
 
               </div>
