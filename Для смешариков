@@ -2,5 +2,10 @@ git pull WaterDelivery BackW ОБЯЗАТЕЛЬНО ПЕРЕД НАЧАЛОМ!!!
 
 & .\venv\Scripts\uvicorn.exe app.main:app --reload
 
+uvicorn app.main:app --reload
+
 
 Вытащить git pull WaterDelivery BackW
+
+
+venv\Scripts\activate
